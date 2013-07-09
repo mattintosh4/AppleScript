@@ -7,6 +7,7 @@ property mediatomb : "/opt/local/bin/mediatomb"
 property PID : null
 
 on run
+    set NIC to {}
     try
         set NIC to every paragraph of (do shell script "ifconfig | awk -F : '$1 ~ /^en[0-9]/ { print $1 }'")
     end try

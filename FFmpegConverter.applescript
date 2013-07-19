@@ -1,17 +1,24 @@
 property ffmpeg : "/usr/local/bin/ffmpeg"
 
-tell application "Finder" to set selections to selection as alias list
-repeat with f in selections
-	if folder of (info for f) is not true then
-		set f to quoted form of POSIX path of f
-		main({"-i", f, "-acodec copy", "-vcodec copy", f & ".mp4", ";", "exit"})
-	end if
-end repeat
+on run
+	repeat with f in (choose file default location (name of front window of application "Finder") with multiple selections allowed)
+		main(f)
+	end repeat
+end run
 
-on main(args)
+on open args
+	repeat with f in args
+		main(f)
+	end repeat
+end open
+
+on main(input)
+	set input to quoted form of POSIX path of input
+	
 	copy text item delimiters of AppleScript to save_IFS
 	copy space to text item delimiters of AppleScript
-	set args to args as string
+	set cmd to {ffmpeg, "-i", input, "-acodec copy", "-vcodec copy", input & ".mp4", ";", "exit"} as string
 	copy save_IFS to text item delimiters of AppleScript
-	tell application "Terminal" to activate (do script ffmpeg & space & args)
+	
+	tell application "Terminal" to activate (do script cmd)
 end main

@@ -1,0 +1,1 @@
+tell application "Google Chrome" to set the clipboard to (title of tab of front window & return & URL of tab of front window) as string
